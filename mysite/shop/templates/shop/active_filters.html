@@ -1,0 +1,75 @@
+{% if request.GET %}
+<div class="active-filters mb-4">
+    <h6 class="d-inline-block me-2">Активні фільтри:</h6>
+    
+    {% if request.GET.available %}
+    <span class="filter-tag">
+        {% if request.GET.available == '1' %}В наявності{% else %}Немає в наявності{% endif %}
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'available' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="text-decoration-none">
+            <small>✕</small>
+        </a>
+    </span>
+    {% endif %}
+    
+    {% if request.GET.min_price %}
+    <span class="filter-tag">
+        Ціна від: {{ request.GET.min_price }} грн
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'min_price' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="text-decoration-none">
+            <small>✕</small>
+        </a>
+    </span>
+    {% endif %}
+    
+    {% if request.GET.max_price %}
+    <span class="filter-tag">
+        Ціна до: {{ request.GET.max_price }} грн
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'max_price' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="text-decoration-none">
+            <small>✕</small>
+        </a>
+    </span>
+    {% endif %}
+    
+    {% comment %}Фільтр статі (тільки для парфумів){% endcomment %}
+    {% if request.GET.gender and product_type == 'perfume' %}
+    <span class="filter-tag">
+        {% if request.GET.gender == 'male' %}Чоловічий
+        {% elif request.GET.gender == 'female' %}Жіночий
+        {% elif request.GET.gender == 'unisex' %}Унісекс
+        {% else %}{{ request.GET.gender }}{% endif %}
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'gender' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="text-decoration-none">
+            <small>✕</small>
+        </a>
+    </span>
+    {% endif %}
+    
+    {% if request.GET.scent_group %}
+    <span class="filter-tag">
+        {% if request.GET.scent_group == 'floral' %}Квіткові
+        {% elif request.GET.scent_group == 'fresh and citrus' %}Свіжі та Цитрусові
+        {% elif request.GET.scent_group == 'sweet and fruity' %}Солодкі та Фруктові
+        {% elif request.GET.scent_group == 'oriental and spicy' %}Східні та Пряні
+        {% elif request.GET.scent_group == 'woody' %}Деревинні
+        {% else %}{{ request.GET.scent_group }}{% endif %}
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'scent_group' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="text-decoration-none">
+            <small>✕</small>
+        </a>
+    </span>
+    {% endif %}
+    
+    {% comment %}Фільтр розміру (тільки для парфумів){% endcomment %}
+    {% if request.GET.size and product_type == 'perfume' %}
+    <span class="filter-tag">
+        {% if request.GET.size == '16' %}16мл
+        {% elif request.GET.size == '100' %}100мл
+        {% else %}{{ request.GET.size }}{% endif %}
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'size' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="text-decoration-none">
+            <small>✕</small>
+        </a>
+    </span>
+    {% endif %}
+    
+    {% comment %}Динамічна переадресація залежно від типу продукту{% endcomment %}
+    <a href="{% if product_type == 'candle' %}{% url 'product_list_cand' %}{% else %}{% url 'product_list_perf' %}{% endif %}" 
+       class="btn btn-sm btn-outline-secondary ms-2">Скинути всі</a>
+</div>
+{% endif %}

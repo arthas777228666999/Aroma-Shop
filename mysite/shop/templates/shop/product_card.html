@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% load static %} 
+<link rel="stylesheet" href="{% static 'css/product_card_style.css' %}">
+
+{% if slide %}
+    <div class="position-relative text-center text-white mb-2"> 
+        <img src="{{ slide.image.url }}" class="img-fluid w-100" alt="Product Photo">
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <p class="display-4">{{ slide.title }}</p>
+            {% if slide.subtitle %}
+                <h1 class="lead">{{ slide.subtitle }}</h1>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+<br><div class="container product-container">
+    <div>
+        <img src="{{ product.picture.url }}" class="product-image" alt="{{ product.name }}">
+    </div>
+    <div class="product-details">
+        <h2 class="mb-3">{{ product.name }}</h2>
+        <p>₴{{ product.price }}</p>
+        {% if product.is_bestseller %}
+            <span class="badge bg-dark text-white px-3 py-2">Bestseller</span>
+        {% endif %}
+        <br><hr>
+        {% if product.top_notes or product.middle_notes or product.base_notes %}
+        <div class="mt-4">
+            <h4>Ноти аромату:</h4><br>
+            <table>
+                {% if product.top_notes %}
+                <tr>
+                    <td><h5><i>Верхні ноти:</i></h5></td>
+                    <td><p>{{ product.top_notes }}</p></td>
+                </tr>
+                {% endif %}
+                {% if product.middle_notes %}
+                <tr>
+                    <td><h5><i>Ноти серця:</i></h5></td>
+                    <td><p>{{ product.middle_notes }}</p></td>
+                </tr>
+                {% endif %}
+                {% if product.base_notes %}
+                <tr>
+                    <td><h5><i>Базові ноти:</i></h5></td>
+                    <td><p>{{ product.base_notes }}</p></td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+        {% endif %}
+        <hr>
+        {% if product.scent_group %}
+        <div class="mt-4">
+            <h4>Група ароматів:</h4>
+            <p>{{ product.get_scent_group_display }}</p>
+        </div>
+        {% endif %}
+
+        {% if product.gender %}
+        <hr>
+        <div class="mt-4">
+            <h4>Для кого:</h4>
+            <p>{{ product.get_gender_display }}</p>
+        </div>
+        {% endif %}
+
+        <br><h4>Опис</h4><br>
+        <p>{{ product.description }}</p><br>
+        <form method="post" action="{% url 'add_to_cart' model_name product.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <button type="submit" class="btn btn-outline-dark mt-3"><h3>ДОДАТИ В КОШИК</h3></button>
+        </form>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#add-to-cart-btn').click(function (e) {
+      e.preventDefault();
+
+      const modelName = $(this).data('model');
+      const productId = $(this).data('id');
+
+      $.ajax({
+        url: `/cart/add/${modelName}/${productId}/`,
+        method: 'POST',
+        data: {
+          quantity: 1,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function (response) {
+          $('#cart-message').fadeIn().delay(2000).fadeOut();
+        },
+        error: function (xhr) {
+          alert('Помилка при додаванні до кошика.');
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

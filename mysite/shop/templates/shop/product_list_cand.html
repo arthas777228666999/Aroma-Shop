@@ -1,0 +1,342 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Усі аромати{% endblock %}
+
+{% block content %}
+
+{% load static %} 
+<link rel="stylesheet" href="{% static 'css/product_list_cand_style.css' %}">
+
+<div>
+    <h1 class="title">УСІ СВІЧКИ</h1>
+</div>
+
+<div class="container-fluid py-3"> 
+    <div class="row">
+        <div class="col-12 mb-3"> 
+            <form method="get" id="filterForm">
+                <div class="original-filter">
+                    {{ filter_form.available }}
+                    {{ filter_form.scent_group }}
+                    <input type="hidden" name="min_price" id="min_price" value="{{ request.GET.min_price|default:'' }}">
+                    <input type="hidden" name="max_price" id="max_price" value="{{ request.GET.max_price|default:'' }}">
+                </div>
+
+                <div class="filter-header">
+                    <span class="filter-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="21" x2="4" y2="14"></line>
+                            <line x1="4" y1="10" x2="4" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12" y2="3"></line>
+                            <line x1="20" y1="21" x2="20" y2="16"></line>
+                            <line x1="20" y1="12" x2="20" y2="3"></line>
+                            <line x1="1" y1="14" x2="7" y2="14"></line>
+                            <line x1="9" y1="8" x2="15" y2="8"></line>
+                            <line x1="17" y1="16" x2="23" y2="16"></line>
+                        </svg>
+                    </span>
+                    Фільтри
+                    <span class="results-count">{{ product_count }} Результати</span>
+                </div>
+                
+                <div class="filter-container">
+                    <!-- Фільтр наявності -->
+                    <div class="filter-dropdown">
+                        <button type="button" class="filter-button" data-filter="availability">
+                            Наявність <i class="fi fi-ts-angle-small-down"></i>
+                        </button>
+                        <div class="filter-dropdown-content" id="availability-dropdown">
+                            <div>
+                                <input type="checkbox" id="available-yes" name="available" value="1" {% if request.GET.available == '1' %}checked{% endif %}>
+                                <label for="available-yes">В наявності</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="available-no" name="available" value="0" {% if request.GET.available == '0' %}checked{% endif %}>
+                                <label for="available-no">Немає в наявності</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-dropdown">
+                        <button type="button" class="filter-button" data-filter="price">
+                            Ціна <i class="fi fi-ts-angle-small-down"></i>
+                        </button>
+                        <div class="filter-dropdown-content price-range-container" id="price-dropdown">
+                            <div class="price-range-info">
+                                Найвища ціна – 1000.00
+                            </div>
+                            
+                            <div class="price-inputs">
+                                <div>
+                                    <span>₴</span>
+                                    <input type="text" id="min-price-input" placeholder="0" value="{{ request.GET.min_price|default:'0' }}">
+                                </div>
+                                <div>
+                                    <span>₴</span>
+                                    <input type="text" id="max-price-input" placeholder="1000" value="{{ request.GET.max_price|default:'1000' }}">
+                                </div>
+                            </div>
+                            
+                            <div class="price-slider">
+                                <div class="price-slider-track">
+                                    <div class="price-slider-range" id="priceRange"></div>
+                                </div>
+                                <input type="range" min="0" max="1000" value="{{ request.GET.min_price|default:'0' }}" class="slider" id="minPriceSlider">
+                                <input type="range" min="0" max="1000" value="{{ request.GET.max_price|default:'1000' }}" class="slider" id="maxPriceSlider">
+                            </div>
+                            
+                            <div class="mt-4 text-center">
+                                <button type="button" id="applyPriceFilter" class="btn btn-dark">Застосувати</button>
+                            </div>
+                        </div>
+                    </div>                  
+                    <div class="filter-dropdown">
+                        <button type="button" class="filter-button" data-filter="scent">
+                            Група ароматів <i class="fi fi-ts-angle-small-down"></i>
+                        </button>
+                        <div class="filter-dropdown-content" id="scent-dropdown">
+                            {% for value, label in filter_form.scent_group.field.choices %}
+                            <div>
+                                <input type="checkbox" id="scent-{{ value }}" name="scent_group" value="{{ value }}" 
+                                       {% if value|stringformat:"s" in request.GET.scent_group|default:"" %}checked{% endif %}>
+                                <label for="scent-{{ value }}">{{ label }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-12 product-section">
+            <div class="d-flex justify-content-between align-items-center mb-2"> 
+                <div>
+                    <p class="mb-0">Знайдено: <strong>{{ product_count }}</strong> товарів</p>
+                </div>
+            </div>
+
+            <!-- Active Filters -->
+            {% include 'shop/active_filters.html' %}
+
+            <!-- Products Grid -->
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+                {% for product in products %}
+                <div class="col">
+                    <a href="{% url 'product_card' model_name='candle' product_id=product.id %}
+" class="product-link text-decoration-none text-reset">
+                        <div class="product-card">
+                            <div class="product-image-container">                         
+                                <!-- Badges -->
+                                <div class="badge-container">
+                                    {% if product.is_bestseller %}
+                                    <span class="bestseller-badge mb-1 d-block">BESTSELLER</span>
+                                    {% endif %}
+                                </div>
+                                <!-- Product Image -->
+                                {% if product.picture %}
+                                <img src="{{ product.picture.url }}" class="product-image" alt="{{ product.name }}">
+                                {% else %}
+                                <div class="bg-light d-flex justify-content-center align-items-center product-image">
+                                    <i class="bi bi-image" style="font-size: 3rem; color: #dee2e6;"></i>
+                                </div>
+                                {% endif %}
+                                    <button class="wishlist-toggle btn btn-link position-absolute top-0 end-0 p-2" id="wishlist-icon"
+                                          data-product-id="{{ product.id }}" 
+                                          data-product-model="{{ product.model_name }}">
+                                    <i class="fi fi-ts-anatomical-heart {% if product in user_wishlist_products %} active {% endif %}"></i>
+                                  </button>
+                            </div>
+
+                            <div class="product-info">
+                                <!-- Product Title -->
+                                <h5 class="product-title">
+                                    {% if product.name %}
+                                        {{ product.name }}
+                                    {% else %}
+                                        {% if product.brand %}{{ product.brand }}{% endif %}
+                                    {% endif %}
+                                </h5>
+                                
+                                <!-- Product Description -->
+                                <div class="product-description">
+                                    {% if product.short_description %}
+                                        {{ product.short_description }}
+                                    {% else %}
+                                        {% if product.scent_group %}, {{ product.get_scent_group_display }}{% endif %}
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Price Display -->
+                                <div class="price-container">
+                                    {% if product.sale_price %}
+                                        <span class="sale-price">₴{{ product.sale_price }}</span>
+                                        <span class="original-price">₴{{ product.price }}</span>
+                                    {% else %}
+                                        <span class="regular-price">₴{{ product.get_display_price }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="empty-state py-5">
+                        <i class="bi bi-search empty-state-icon d-block mb-3"></i>
+                        <h4>Товарів не знайдено</h4>
+                        <p class="text-muted">Наразі товари з такими параметрами відсутні.</p>
+                        <a href="{% url 'product_list_cand' %}" class="btn btn-dark w-100 mt-3">Скинути фільтри</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle dropdowns
+    document.querySelectorAll('.filter-button').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            const filterId = this.getAttribute('data-filter');
+            const dropdown = document.getElementById(`${filterId}-dropdown`);
+
+            // Close all other dropdowns
+            document.querySelectorAll('.filter-dropdown-content').forEach(d => {
+                if (d !== dropdown) {
+                    d.classList.remove('show');
+                }
+            });
+
+            // Toggle current dropdown
+            dropdown.classList.toggle('show');
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.filter-dropdown')) {
+            document.querySelectorAll('.filter-dropdown-content').forEach(d => d.classList.remove('show'));
+        }
+    });
+
+    // Sync sliders and inputs for price range
+    const minPriceInput = document.getElementById('min-price-input');
+    const maxPriceInput = document.getElementById('max-price-input');
+    const minPriceSlider = document.getElementById('minPriceSlider');
+    const maxPriceSlider = document.getElementById('maxPriceSlider');
+    const priceRange = document.getElementById('priceRange');
+
+    function updatePriceSliderRange() {
+        const min = parseInt(minPriceSlider.value);
+        const max = parseInt(maxPriceSlider.value);
+        const rangeWidth = ((max - min) / (1000)) * 100;
+        const left = (min / 1000) * 100;
+        priceRange.style.left = `${left}%`;
+        priceRange.style.width = `${rangeWidth}%`;
+    }
+
+    // Sync input with sliders
+    minPriceSlider.addEventListener('input', () => {
+        minPriceInput.value = minPriceSlider.value;
+        updatePriceSliderRange();
+    });
+
+    maxPriceSlider.addEventListener('input', () => {
+        maxPriceInput.value = maxPriceSlider.value;
+        updatePriceSliderRange();
+    });
+
+    minPriceInput.addEventListener('change', () => {
+        let val = parseInt(minPriceInput.value) || 0;
+        if (val < 0) val = 0;
+        if (val > parseInt(maxPriceSlider.value)) val = parseInt(maxPriceSlider.value);
+        minPriceSlider.value = val;
+        updatePriceSliderRange();
+    });
+
+    maxPriceInput.addEventListener('change', () => {
+        let val = parseInt(maxPriceInput.value) || 1000;
+        if (val > 1000) val = 1000;
+        if (val < parseInt(minPriceSlider.value)) val = parseInt(minPriceSlider.value);
+        maxPriceSlider.value = val;
+        updatePriceSliderRange();
+    });
+
+    // Apply price filter
+    document.getElementById('applyPriceFilter').addEventListener('click', () => {
+        document.getElementById('min_price').value = minPriceInput.value;
+        document.getElementById('max_price').value = maxPriceInput.value;
+        document.getElementById('filterForm').submit();
+    });
+
+    // Initialize slider range display
+    updatePriceSliderRange();
+
+    const filterContainer = document.querySelector('.filter-container');
+    const applyFiltersButton = document.createElement('button');
+    applyFiltersButton.type = 'button';
+    applyFiltersButton.id = 'applyAllFilters';
+    applyFiltersButton.className = 'btn btn-outline-dark mt-3';
+    applyFiltersButton.textContent = 'Застосувати всі фільтри';
+    applyFiltersButton.style.marginLeft = 'auto';
+    filterContainer.appendChild(applyFiltersButton);
+    document.getElementById('applyAllFilters').addEventListener('click', function() {
+        document.getElementById('filterForm').submit();
+    });
+    document.querySelectorAll('#filterForm input[type="checkbox"]').forEach(checkbox => {
+        checkbox.removeEventListener('change', function() {
+            document.getElementById('filterForm').submit();
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.wishlist-toggle').forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation(); // Stopping event propagation to prevent redirect
+
+          const productId = this.dataset.productId;
+          const modelName = this.dataset.productModel;
+
+          fetch("{% url 'wishlist_toggle' %}", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'X-CSRFToken': '{{ csrf_token }}',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: new URLSearchParams({
+              'product_id': productId,
+              'model_name': modelName
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if(data.success){
+              const icon = this.querySelector('i');
+              if(data.action === 'added'){
+                icon.classList.add('active');
+              } else if(data.action === 'removed'){
+                icon.classList.remove('active');
+              }
+            } else {
+              alert('Помилка: ' + data.error);
+            }
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            alert("Не вдалося з'єднатись з сервером");
+          });
+        });
+      });
+    });
+</script>
+</script>
+
+{% endblock %}

@@ -1,0 +1,129 @@
+.footer {
+	background-color: black;
+	color: white;
+	padding: 40px 20px;
+	font-family: Sitka Subheading;
+	margin-top: 0 !important;
+	z-index: 0;
+}
+
+.footer-top {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+.footer-block {
+	flex: 1 1 200px;
+	margin: 10px;
+}
+
+.footer-block ul {
+    list-style-type: none;
+    padding: 0; 
+    margin: 0; 
+}
+
+.footer-block ul li a {
+    display: block;
+    padding: 8px 0; 
+    font-size: 0.9em;
+    color: white;
+    text-decoration: none;
+}
+
+.footer-block ul li a:hover {
+	text-decoration: underline;
+}
+
+.footer h4 {
+    font-size: 0.8em;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.footer h3 {
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.footer-block h4 span {
+    padding-bottom: 5px; 
+    display: inline-block; 
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-logo-text {
+	text-decoration: none;
+	color: #EBE1E7;
+	font-size: 3.2em;     
+	font-family: Curlz MT;
+}
+
+.footer form {
+    display: flex; 
+    align-items: flex-end; 
+}
+
+.footer input[type="email"] {
+    padding: 10px;
+    margin-bottom: 0;
+    width: 70%;
+    border: none;
+    border-bottom: 1px solid white;
+    border-radius: 0;
+    font-size: 0.9em;
+    color: white;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin-right: 10px;
+}
+
+.footer input[type="email"]:focus {
+    outline: none;
+    border-bottom: 1px solid white;
+    box-shadow: none;
+}
+
+.footer button {
+    padding: 10px 16px;
+    background-color: transparent; 
+    color: white; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-bottom: 2px; 
+}
+
+.footer button:hover {
+    background-color: rgba(255, 255, 255, 0.2); 
+}
+.footer-bottom {
+	text-align: center;
+	border-top: 1px solid white;
+	padding-top: 10px;
+	font-size: 12px;
+	color: white;
+}
+
+.social-icons {
+	margin-top: 15px;
+}
+
+.social-icons i {
+    padding-top: 10px; 
+    font-size: 17px; 
+    color: white; 
+    margin-right: 10px; 
+}

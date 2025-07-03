@@ -1,0 +1,289 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-thin-rounded/css/uicons-thin-rounded.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-thin-straight/css/uicons-thin-straight.css'>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/header_style.css' %}">
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/search_panel_style.css' %}">
+
+<div class="header" id="mainContent">
+    <div class="top-bar">
+        <div id="topBarCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <p class="delivery-info">Безкоштовна доставка від 1500 грн</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-header-logo">
+        <div class="logo">
+            <a href="/" class="logo-link">AromaShop</a>
+        </div>
+    </div>
+</div>
+
+<div class="sticky-wrapper">
+    <div class="main-header-panel">
+
+        <div class="search-container">
+          <button class="btn" type="button" onclick="openSearch()">
+            <i class="fi fi-rr-search fs-4"></i>
+          </button>
+        </div>
+
+         <!-- Оверлей для затемнення -->
+        <div class="search-overlay" id="searchOverlay" onclick="closeSearch()"></div>
+
+        <!-- Бокова панель пошуку -->
+        <div class="search-panel" id="searchPanel">
+            <div class="search-header">
+                <h2 class="search-title">Що ви шукаєте?</h2>
+                <button class="search-close" onclick="closeSearch()">x</button>
+            </div>
+            
+            <div class="search-content">
+                <form class="search-form" onsubmit="return false;">
+                    <div class="search-input-container">
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput"
+                            placeholder="Введіть назву товару..."
+                            autocomplete="off"
+                        >
+                        <div class="search-icon">
+                            <i class="fi fi-rr-search"></i>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="search-results" id="searchResults">
+                    <!-- Результати пошуку будуть тут -->
+                </div>
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <li class="dropdown" id="perf-dropdown">
+                <h2>ПАРФУМИ <i class="fi fi-ts-angle-small-down"></i></h2>
+                <div id="perf" class="dropdown-content">
+                    <div class="dropdown-column">
+                       <h3><a href="/product_list_perf">Усі аромати</a></h3>
+                       <h3><a href="/scent_of_month">Аромати місяця</a></h3> 
+                    </div>
+                    <div class="dropdown-column">
+                        <h3>Для кого</h3>
+                        <ul>
+                            <li><a href="{% url 'filtered_perfumes' 'gender' 'female' %}">Жінкам</a></li>
+                            <li><a href="{% url 'filtered_perfumes' 'gender' 'male' %}">Чоловікам</a></li>
+                            <li><a href="{% url 'filtered_perfumes' 'gender' 'unisex' %}">Унісекс</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown-column">
+                        <h3>Формати флаконів</h3>
+                        <ul>
+                            <li><a href="{% url 'filtered_perfumes' 'size' '100' %}">Повний розмір</a></li>
+                            <li><a href="{% url 'filtered_perfumes' 'size' '16' %}">Тревел-версії (16мл)</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown-column">
+                        <h3>Типи ароматів</h3>
+                        <ul>
+                            <li><a href="{% url 'filtered_perfumes' 'scent' 'floral' %}">Квіткові</a></li>
+                            <li><a href="{% url 'filtered_perfumes' 'scent' 'fresh and citrus' %}">Свіжі та Цитрусові</a></li>
+                            <li><a href="{% url 'filtered_perfumes' 'scent' 'sweet and fruity' %}">Солодкі та Фруктові</a></li>
+                            <li><a href="{% url 'filtered_perfumes' 'scent' 'oriental and spicy' %}">Східні та Пряні</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li class="dropdown" id="coll-dropdown">
+                <h2>КОЛЕКЦІЇ <i class="fi fi-ts-angle-small-down"></i></h2>
+                <div id="coll" class="dropdown-content">
+                    <div class="dropdown-column">
+                        <h4><a href="/darkfem_collection">DARKFEM COLLECTION</a></h4> 
+                        <h4><a href="/loveme_collection">LOVEME COLLECTION</a></h4>
+                    </div> 
+                </div>
+            </li>
+            <li class="dropdown" id="cand-dropdown">
+                <h2>СВІЧКИ <i class="fi fi-ts-angle-small-down"></i></h2>
+                <div id="cand" class="dropdown-content">
+                    <div class="dropdown-column">
+                       <h4><a href="/product_list_cand">Усі аромати</a></h4> 
+                    </div>
+                    <div class="dropdown-column">
+                        <h3>Типи ароматів</h3>
+                        <ul>
+                            <li><a href="{% url 'filtered_candles' 'scent' 'woody' %}">Деревинні</a></li>
+                            <li><a href="{% url 'filtered_candles' 'scent' 'floral' %}">Квіткові</a></li>
+                            <li><a href="{% url 'filtered_candles' 'scent' 'sweet and fruity' %}">Солодкі та Фруктові</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li class="dropdown" id="brnd-dropdown">
+                <h2>ПРО БРЕНД <i class="fi fi-ts-angle-small-down"></i></h2>
+                <div id="brnd" class="dropdown-content">
+                    <div class="dropdown-column">
+                        <h4><a href="/about_us">Про Нас</a></h4>
+                        <h4><a href="/partnership">Партнерам</a></h4>
+                        <h4><a href="/delivery_info">Доставка і оплата</a></h4>
+                        <h4><a href="/contacts">Контакти</a></h4>  
+                    </div>
+                </div>
+            </li>
+        </nav>
+        <div class="user-actions">
+            {% if user.is_authenticated %}
+                <a href="/account"><i class="fi fi-tr-circle-user"></i></a>
+            {% else %}
+                <a href="/login"><i class="fi fi-tr-circle-user"></i></a>
+            {% endif %}
+            <a href="/wishlist"><i class="fi fi-ts-anatomical-heart"></i></a>
+            <a href="/cart"><i class="fi fi-tr-bags-shopping"></i></a>
+        </div>
+    </div>
+    <div class="page-overlay"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-2ITDA2sRDtqUBdJpTrAGY4/zFtMdtBFSLkbG4k6P4urzZVjBDcfNmY3GhIb8m5/L" crossorigin="anonymous"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdowns = document.querySelectorAll('.dropdown');
+    const overlay = document.querySelector('.page-overlay');
+    
+    // Show overlay when hovering over any dropdown
+    dropdowns.forEach(dropdown => {
+        dropdown.addEventListener('mouseenter', function() {
+            overlay.style.display = 'block';
+        });
+        
+        dropdown.addEventListener('mouseleave', function() {
+            setTimeout(function() {
+                const isAnyDropdownHovered = Array.from(dropdowns).some(d => 
+                    d.matches(':hover') || d.querySelector('.dropdown-content:hover'));
+                
+                if (!isAnyDropdownHovered) {
+                    overlay.style.display = 'none';
+                }
+            }, 100);
+        });
+    });
+    
+    // Hide overlay when clicking on it
+    overlay.addEventListener('click', function() {
+        overlay.style.display = 'none';
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const overlay = document.querySelector('.page-overlay');
+    const header = document.querySelector('.sticky-wrapper');
+
+    function updateOverlayHeight() {
+        const headerHeight = header.offsetHeight;
+        const pageHeight = document.documentElement.scrollHeight;
+        overlay.style.height = (pageHeight - 400) + 'px';
+    }
+
+    updateOverlayHeight();
+    window.addEventListener('resize', updateOverlayHeight);
+});
+
+// ===== ФУНКЦІЇ ДЛЯ ПОШУКОВОЇ ПАНЕЛІ =====
+        function openSearch() {
+            document.getElementById('searchOverlay').classList.add('active');
+            document.getElementById('searchPanel').classList.add('active');
+            document.getElementById('mainContent').classList.add('search-active');
+            document.body.style.overflow = 'hidden';
+            
+            // Фокус на поле вводу
+            setTimeout(() => {
+                document.getElementById('searchInput').focus();
+            }, 300);
+        }
+
+        function closeSearch() {
+            document.getElementById('searchOverlay').classList.remove('active');
+            document.getElementById('searchPanel').classList.remove('active');
+            document.getElementById('mainContent').classList.remove('search-active');
+            document.body.style.overflow = 'auto';
+            
+            // Очищення результатів
+            document.getElementById('searchResults').innerHTML = '';
+            document.getElementById('searchInput').value = '';
+        }
+
+        const resultsContainer = document.getElementById('searchResults');
+        let searchTimeout;
+
+        function performSearch(query) {
+            if (!query || query.length < 2) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            resultsContainer.innerHTML = `
+                <div class="search-loading">
+                    <div style="margin-bottom: 10px;">🔍</div> Пошук товарів...
+                </div>`;    
+
+            fetch(`/ajax/search-products/?q=${encodeURIComponent(query)}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => r.json())
+            .then(data => renderResults(data.products))
+            .catch(() => resultsContainer.innerHTML =
+                '<div class="search-no-results">Помилка пошуку 😔</div>');
+        }
+
+        function renderResults(products) {
+            if (products.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="search-no-results">
+                        <div style="margin-bottom: 10px;">😔</div>
+                        Товари не знайдено
+                        <div class="hint">Спробуйте змінити запит</div>
+                    </div>`;
+                return;
+            }
+
+            // ⚡️ Сітка із картками
+            const html = products.map(p => `
+                <a href="${p.url}" class="card product-card">
+                    <img src="${p.image}" class="card-img-top" alt="${p.name}">
+                    <div class="card-body">
+                        <h6 class="card-title">${p.name}</h6>
+                        <p class="card-text small">${p.description}</p>
+                        <span class="price">${p.price} грн</span>
+                    </div>
+                </a>`).join('');
+
+            resultsContainer.innerHTML = `<div class="cards-grid">${html}</div>`;
+        }
+
+        // Обробка введення тексту
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+            
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        });
+
+        // Закриття панелі по ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeSearch();
+            }
+        });
+</script>

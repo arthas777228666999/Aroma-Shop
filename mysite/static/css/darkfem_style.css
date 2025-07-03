@@ -1,0 +1,116 @@
+body {
+    font-family: "Cambria Math", serif;
+    background-color: white;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: "Sitka Subheading", serif;
+}
+
+.product-card {
+    border: none;
+    background-color: transparent;
+    transition: transform 0.3s ease;
+    margin-bottom: 0px;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image-container {
+    height: 280px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
+}
+
+.product-image {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.wishlist-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #555;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.badge-container {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    z-index: 10;
+}
+
+.bestseller-badge {
+    background-color: black;
+    color: white;
+    padding: 4px 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 0;
+    z-index: 5;
+}
+
+.product-info {
+    text-align: center;
+    padding: 15px 5px;
+}
+
+.product-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0px;
+    min-height: 10px;
+}
+
+.price-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.regular-price {
+    font-weight: bold;
+}
+
+.sale-price {
+    font-weight: bold;
+    color: #d9534f;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.display-4 {
+    text-decoration: none;
+    color: black;
+    font-size: 2.6em;     
+    font-family: Curlz MT;
+    display: block;
+    color: #EBE1E7;
+}
+
+.lead {
+    font-size: 4em;
+    color: #EBE1E7;
+}
+
+.product-section {
+    padding-left: 80px;
+    padding-right: 80px;
+}

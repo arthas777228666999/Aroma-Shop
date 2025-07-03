@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% load static %} 
+<link rel="stylesheet" href="{% static 'css/scent_of_month_style.css' %}">
+
+{% if slide %}
+<div class="position-relative text-center text-white mb-2"> 
+    <img src="{{ slide.image.url }}" class="img-fluid w-100" alt="Slide Image">
+    <div class="position-absolute top-50 start-0 translate-middle-y text-start ps-5">
+        <p class="display-4">{{ slide.title }}</p>
+        {% if slide.subtitle %}
+        <h1 class="lead">{{ slide.subtitle }}</h1>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<div class="col-12 product-section">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for product in products %}
+        <div class="col">
+            <div class="product-card">
+                <div class="product-image-container">
+                    <!-- Badges -->
+                    <div class="badge-container">
+                        {% if product.is_bestseller %}
+                        <span class="bestseller-badge mb-1 d-block">BESTSELLER</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Product Image -->
+                    {% if product.picture %}
+                    <img src="{{ product.picture.url }}" class="product-image" alt="{{ product.name }}">
+                    {% else %}
+                    <div class="bg-light d-flex justify-content-center align-items-center product-image">
+                        <i class="bi bi-image" style="font-size: 3rem; color: #dee2e6;"></i>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="product-info">
+                    <!-- Product Title -->
+                    <h5 class="product-title">
+                        {% if product.name %}
+                            {{ product.name }}
+                        {% else %}
+                            {% if product.brand %}{{ product.brand }}{% endif %}
+                        {% endif %}
+                    </h5>    
+                    <!-- Price Display -->
+                    <div class="price-container">
+                        {% if product.sale_price %}
+                            <span class="sale-price">₴{{ product.sale_price }}</span>
+                            <span class="original-price">₴{{ product.price }}</span>
+                        {% else %}
+                            <span class="regular-price">₴{{ product.get_display_price }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/checkout_style.css' %}">
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 d-flex shadow rounded overflow-hidden bg-white">
+
+      <!-- LEFT: Checkout Form -->
+      <div class="p-5 flex-grow-1 checkout-form">
+        <h1 class="mb-4">Оформлення замовлення</h1>
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <input type="text" class="form-control" id="country" name="country" placeholder="Ваша країна/регіон" required>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Ім'я" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Прізвище" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input type="text" class="form-control" id="np_branch" name="np_branch" placeholder="Номер або адреса відділення" required>
+          </div>
+
+          <div class="mb-3">
+            <input type="text" class="form-control" id="city" name="city" placeholder="Місто" required>
+          </div>
+
+          <div class="mb-3">
+            <input type="tel" class="form-control" id="phone" name="phone" placeholder="+380XXXXXXXXX" required pattern="^\+?380\d{9}$" title="Введіть номер у форматі +380XXXXXXXXX">
+          </div>
+
+          <div id="container" class="mt-4 mb-3"></div>
+
+          <button type="submit" class="btn btn-dark w-100">Підтвердити замовлення</button>
+        </form>
+      </div>
+
+      <!-- RIGHT: Order Summary -->
+      <div class="p-4 order-summary">
+        {% if cart_items %}
+          <h5 class="mb-4">Ваше замовлення</h5>
+          {% for item in cart_items %}
+            <div class="cart-item">
+              <img src="{{ item.product.picture.url }}" alt="{{ item.product.name }}">
+              <div class="cart-item-details">
+                <h5>{{ item.product.name }}</h5>
+                <p>{{ item.product.price }} грн × {{ item.quantity }}</p>
+                <p>{{ item.item_total }} грн</p>
+              </div>
+            </div>
+          {% endfor %}
+
+          <hr>
+
+          <div class="d-flex justify-content-between">
+            <span>Разом</span>
+            <span>{{ total }} ₴</span>
+          </div>
+          <p class="small mt-2 text-muted">Доставка за тарифами перевізника</p>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script async
+    src="https://pay.google.com/gp/p/js/pay.js"
+    onload="onGooglePayLoaded()"></script>
+
+<script>
+  let paymentsClient = null;
+
+  function onGooglePayLoaded() {
+    paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'}); // TEST або PRODUCTION
+
+    const isReadyToPayRequest = {
+      apiVersion: 2,
+      apiVersionMinor: 0,
+      allowedPaymentMethods: [{
+        type: 'CARD',
+        parameters: {
+          allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+          allowedCardNetworks: ['MASTERCARD', 'VISA']
+        }
+      }]
+    };
+
+    paymentsClient.isReadyToPay(isReadyToPayRequest)
+      .then(function(response) {
+        if (response.result) {
+          // Google Pay доступний, показуємо кнопку
+          addGooglePayButton();
+        } else {
+          // Google Pay не доступний
+          console.log('Google Pay не підтримується на цьому пристрої');
+        }
+      })
+      .catch(function(err) {
+        console.error('Помилка при перевірці isReadyToPay:', err);
+      });
+  }
+
+  function addGooglePayButton() {
+    const button =
+      paymentsClient.createButton({
+        onClick: onGooglePaymentButtonClicked,
+        buttonColor: 'black',
+        buttonType: 'long'
+      });
+    document.getElementById('container').appendChild(button);
+  }
+
+  function onGooglePaymentButtonClicked() {
+    // Тут запусти процес оплати
+    const paymentDataRequest = getPaymentDataRequest();
+    paymentsClient.loadPaymentData(paymentDataRequest)
+      .then(function(paymentData) {
+        // Оброби отримані дані платежу (paymentData)
+        console.log(paymentData);
+        // Відправ на сервер для завершення оплати
+      })
+      .catch(function(err) {
+        console.error('Оплата скасована або сталася помилка:', err);
+      });
+  }
+
+  function getPaymentDataRequest() {
+    return {
+      apiVersion: 2,
+      apiVersionMinor: 0,
+      allowedPaymentMethods: [{
+        type: 'CARD',
+        tokenizationSpecification: {
+          type: 'PAYMENT_GATEWAY',
+          parameters: {
+            'gateway': 'example', // заміни на свій gateway (stripe, braintree, etc)
+            'gatewayMerchantId': 'exampleMerchantId'
+          }
+        },
+        parameters: {
+          allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+          allowedCardNetworks: ['MASTERCARD', 'VISA']
+        }
+      }],
+      merchantInfo: {
+        merchantId: '01234567890123456789', // заміни на свій merchant ID
+        merchantName: 'Example Merchant'
+      },
+      transactionInfo: {
+        totalPriceStatus: 'FINAL',
+        totalPrice: '12.34',   // заміни на актуальну суму
+        currencyCode: 'USD',
+        countryCode: 'US'
+      }
+    };
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+	h1, h3 {
+	    font-family: "Sitka Subheading", serif;
+	    margin: 0;
+	}
+	p {
+	    font-family: Cambria Math;
+	    margin: 0;
+	    color: black;
+	    font-style: italic;
+	}
+	.container-1 {
+		display: flex;
+	    flex-direction: column;
+	    justify-content: center;
+	    align-items: center;
+	    text-align: center;
+	    min-height: 30vh;
+	    padding-top: 30px;
+	    padding-bottom: 30px;
+	}
+	.container-2 {
+		width: 1000px;
+		text-align: left;
+	}
+	hr {
+	    width: 100%;
+	    border: 1px solid #000;
+	}
+</style>
+
+<div class="container-1">
+	<hr>
+	<h1>ДОСТАВКА І ОПЛАТА</h1>
+	<hr>
+	<div class="container-2">
+		<p><strong>БЕЗКОШТОВНА доставка при замовленні на суму понад 1500 грн.</strong></p><br>
+		<p>Замовлення доставляються компанією "Нова Пошта", за тарифами перевізника.<br><br>
+		Відділення Нова Пошта - від 60 грн.<br><br>Курʼєр Нова Пошта - від 95 грн.<br><br>Зазвичай відправлення здійснюється протягом 1-4 робочих днів після підтвердження замовлення.<br><br>Після того як ваше замовлення буде підтверджене, ви отримаєте повідомлення з інформацією для відслідковування відправлення.<br><br>При замовленні накладеним платежем (з оплатою при отриманні у відділенні) до вартості доставки додається комісія за переказ грошових коштів згідно тарифів перевізника.</p>
+	</div>
+</div>
+{% endblock %}

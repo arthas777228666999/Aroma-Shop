@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% load static %} 
+<link rel="stylesheet" href="{% static 'css/wishlist_style.css' %}">
+
+<main class="flex-grow-1">
+
+{% if wishlist_items %}
+    <div class="row" id="wishlist-container">
+        <h1>ВАШЕ ОБРАНЕ</h1>
+        <div class="col-12">
+            {% for item in wishlist_items %}
+            <div class="wishlist-item" id="wishlist-item-{{ item.id }}">
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="wishlist-item-img">
+                <div class="wishlist-item-details">
+                    <h5>{{ item.product.name }}</h5>
+                    <p>Ціна: {{ item.product.price }} грн</p>
+                </div>
+                <form method="post" action="{% url 'remove_from_wishlist' item.id %}" class="remove-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-dark remove-btn">Видалити товар</button>
+                </form>
+                <form class="move-to-cart-form" data-item-id="{{ item.id }}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-dark remove-btn move-to-cart-btn">
+                        Додати в кошик
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <div class="empty_wishlist" id="empty-wishlist">
+        <h1>ВАШ ВІШЛІСТ ПОРОЖНІЙ</h1>
+        <p>У вашому вішлісті немає товарів</p>
+        <div class="buttons-container">
+            <a href="{% url 'product_list_perf' %}" class="btn btn-outline-dark mt-3">ПЕРЕГЛЯНУТИ ПАРФУМИ</a>
+            <a href="{% url 'product_list_cand' %}" class="btn btn-outline-dark mt-3">ПЕРЕГЛЯНУТИ СВІЧКИ</a>
+        </div>
+    </div>
+{% endif %}
+</main>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<!-- URL-дані -->
+<script>
+    const urls = {
+        perfumes: "{% url 'product_list_perf' %}",
+        candles: "{% url 'product_list_cand' %}"
+    };
+</script>
+
+<!-- AJAX -->
+<script>
+$(document).ready(function () {
+    $('.move-to-cart-form').submit(function (e) {
+        e.preventDefault();
+
+        const form = $(this);
+        const itemId = form.data('item-id');
+        const csrfToken = form.find('input[name="csrfmiddlewaretoken"]').val();
+
+        $.ajax({
+            url: `/wishlist/move-to-cart/${itemId}/`,
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            data: { csrfmiddlewaretoken: csrfToken },
+            success: function (response) {
+                if (response.success) {
+                    $(`#wishlist-item-${itemId}`).fadeOut(300, function () {
+                        $(this).remove();
+
+                        if ($('.wishlist-item').length === 0) {
+                            $('#wishlist-container').replaceWith(`
+                                <div class="empty_wishlist">
+                                    <h1>ВАШ ВІШЛІСТ ПОРОЖНІЙ</h1>
+                                    <p>У вашому вішлісті немає товарів</p>
+                                    <div class="buttons-container">
+                                        <a href="${urls.perfumes}" class="btn btn-outline-dark mt-3">ПЕРЕГЛЯНУТИ ПАРФУМИ</a>
+                                        <a href="${urls.candles}" class="btn btn-outline-dark mt-3">ПЕРЕГЛЯНУТИ СВІЧКИ</a>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                    });
+                } else {
+                    alert(response.message || "Помилка при переміщенні товару до кошика.");
+                }
+            },
+            error: function () {
+                alert("Сталася помилка. Спробуйте ще раз.");
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

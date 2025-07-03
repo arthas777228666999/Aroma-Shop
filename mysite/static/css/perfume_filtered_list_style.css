@@ -1,0 +1,140 @@
+body {
+    font-family: "Cambria Math", serif;
+    background-color: white;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: "Sitka Subheading", serif;
+}
+
+.product-card {
+    border: none;
+    background-color: transparent;
+    transition: transform 0.3s ease;
+    margin-bottom: 0px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image-container {
+    height: 280px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
+}
+
+.product-image {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.badge-container {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    z-index: 10;
+}
+
+.bestseller-badge {
+    background-color: black;
+    color: white;
+    padding: 4px 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 0;
+    z-index: 5;
+}
+
+.product-info {
+    text-align: center;
+    padding: 15px 5px;
+}
+
+.product-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    min-height: 50px;
+}
+
+.product-description {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 10px;
+    min-height: 40px;
+}
+
+.price-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.regular-price {
+    font-weight: bold;
+}
+
+.sale-price {
+    font-weight: bold;
+    color: #d9534f;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.85rem;
+}
+    
+.product-section {
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
+    .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.pagination .page-item {
+    margin: 0 3px;
+}
+
+.pagination .page-link {
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 8px 16px;
+    min-width: 40px;
+    text-align: center;
+    font-size: 14px;
+    transition: all 0.2s;
+    border-radius: 0;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #333;
+    border-color: #333;
+    color: white;
+}
+
+.pagination .page-link:hover {
+    background-color: #f5f5f5;
+    border-color: #333;
+    color: #333;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+    background-color: #f8f9fa;
+    border-color: #ddd;
+}
+    

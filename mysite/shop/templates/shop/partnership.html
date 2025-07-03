@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+	h1 {
+	    font-family: "Sitka Subheading", serif;
+	    margin: 0;
+	}
+	p, ol li {
+	    font-family: Cambria Math;
+	    margin: 0;
+	    color: black;
+	    font-style: italic;
+	}
+	.container-1 {
+		display: flex;
+	    flex-direction: column;
+	    justify-content: center;
+	    align-items: center;
+	    text-align: center;
+	    min-height: 30vh;
+	    padding-top: 30px;
+	    padding-bottom: 30px;
+	}
+	.container-2 {
+		width: 1000px;
+		text-align: left;
+	}
+	hr {
+	    width: 100%;
+	    border: 1px solid #000;
+	}
+</style>
+
+<div class="container-1">
+	<hr>
+	<h1>СПІВПРАЦЯ</h1>
+	<hr>
+	<div class="container-2">
+		<p>Ми в AromaShop відкриті до нових партнерств і прагнемо створювати взаємовигідні та довгострокові відносини з бізнесами, які поділяють наші цінності якості, ексклюзивності та інноваційності.</p> <br>
+		  <p>Як виробник нішевих парфумів, ми пропонуємо:</p> <br>
+		  <ol>
+		    <li>Індивідуальний підхід до кожного партнера — від розробки унікальних ароматів до ексклюзивних умов співпраці.</li> <br>
+		    <li>Гнучкі умови оптових закупівель для магазинів, бутиків, салонів краси та SPA.</li> <br>
+		    <li>Підтримку у просуванні продукції: навчальні матеріали, рекламні матеріали та участь у спільних маркетингових кампаніях.</li> <br>
+		    <li>Співпрацю з дизайнерами, креативними агентствами та блогерами для створення спільних проєктів і колаборацій.</li> <br>
+		  </ol>
+		  <p>Якщо ви зацікавлені у партнерстві або маєте пропозиції, будь ласка, зв’яжіться з нами — разом ми зможемо подарувати клієнтам неповторний досвід ароматів від AromaShop.</p>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load text_filters %}
+{% block content %}
+
+{% load static %} 
+<link rel="stylesheet" href="{% static 'css/home_style.css' %}">
+
+<div id="aromaShopCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-inner">
+        {% for slide in slides %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ slide.image.url }}" class="d-block w-100" alt="{{ slide.title }}">
+                <div class="carousel-caption d-none d-md-block">
+                    <h1>{{ slide.title }}</h1>
+                    <p>{{ slide.description|split_paragraph|safe }}</p>
+                        {% if slide.button_link %}
+                            <a href="{{ slide.button_link }}" class="btn btn-outline-dark">{{ slide.button_text }}</a>
+                        {% else %}
+                            <button class="btn btn-outline-dark">{{ slide.button_text }}</button>
+                        {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="carousel-item active">
+                <div class="d-block w-100 bg-light p-5 text-center">
+                    <p>Наразі немає доступних слайдів для каруселі.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    {% if slides|length > 1 %}
+        <div class="carousel-controls-bottom">
+            <button class="custom-carousel-control" type="button" data-bs-target="#aromaShopCarousel" data-bs-slide="prev">
+                <i class="fi fi-ts-angle-small-left"></i>
+            </button>
+            
+            <div class="carousel-indicators">
+                {% for slide in slides %}
+                    <button type="button" data-bs-target="#aromaShopCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+                {% endfor %}
+            </div>
+            
+            <button class="custom-carousel-control" type="button" data-bs-target="#aromaShopCarousel" data-bs-slide="next">
+                <i class="fi fi-ts-angle-small-right"></i>
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var carousel = new bootstrap.Carousel(document.getElementById('aromaShopCarousel'), {
+            interval: 3000,
+            wrap: true,
+            touch: true
+        });
+        
+        document.querySelectorAll('.custom-carousel-control').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const carouselElement = document.getElementById('aromaShopCarousel');
+                carouselElement.style.transition = 'none';
+                setTimeout(function() {
+                    carouselElement.style.transition = '';
+                }, 50);
+            });
+        });
+    });
+</script>
+{% endblock content %}

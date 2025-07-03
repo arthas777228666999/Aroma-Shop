@@ -1,0 +1,286 @@
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.search-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Бокова панель пошуку */
+.search-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 33.33%;
+    height: 100vh;
+    background-color: #EBE1E7;
+    z-index: 2000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    font-family: Cambria Math;
+}
+
+.search-panel.active {
+    transform: translateX(0);
+}
+
+/* Заголовок панелі */
+.search-header {
+    padding: 30px;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+}
+
+.search-title {
+    font-size: 24px;
+    font-weight: 300;
+    color: #333;
+    margin: 0;
+}
+
+.search-close {
+    position: absolute;
+    top: 50%;
+    right: 30px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: none;
+    transition: all 0.2s ease;
+    font-family: sans-serif !important;
+}
+
+.search-close:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Контент панелі */
+.search-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* Поле пошуку */
+.search-form {
+    margin-bottom: 40px;
+}
+
+.search-input-container {
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 20px 50px 20px 0;
+    font-size: 18px;
+    color: #333;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: #aaa;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+.search-input:focus {
+    border-bottom-color: #000;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #999;
+}
+
+/* Результати пошуку */
+.search-results {
+    margin-top: 20px;
+}
+
+.search-loading {
+    text-align: center;
+    padding: 60px 0;
+    color: #999;
+    font-size: 16px;
+}
+
+.search-no-results {
+    text-align: center;
+    padding: 60px 0;
+    color: #999;
+    font-size: 16px;
+}
+
+.search-item {
+    padding: 20px 0;
+    border-bottom: 1px solid #f5f5f5;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.search-item:hover {
+    background-color: #fafafa;
+    margin: 0 -30px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.search-item:last-child {
+    border-bottom: none;
+}
+
+.search-item-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+    background-color: #f8f9fa;
+}
+
+.search-item-info {
+    flex: 1;
+}
+
+.search-item-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+}
+
+.search-item-description {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.search-item-price {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+}
+
+/* Скролбар */
+.search-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.search-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.search-content::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 2px;
+}
+
+.search-content::-webkit-scrollbar-thumb:hover {
+    background: #bbb;
+}
+
+/* Адаптивність */
+@media (max-width: 1200px) {
+    .search-panel {
+        width: 40%;
+    }
+    
+    .main-content.search-active {
+        transform: translateX(40%);
+    }
+}
+
+@media (max-width: 768px) {
+    .search-panel {
+        width: 100%;
+    }
+    
+    .main-content.search-active {
+        transform: translateX(0);
+    }
+    
+    .search-header {
+        padding: 20px;
+    }
+    
+    .search-content {
+        padding: 20px;
+    }
+    
+    .search-item-image {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .search-item-name {
+        font-size: 14px;
+    }
+    
+    .search-item-description {
+        font-size: 13px;
+    }
+    
+    .search-item-price {
+        font-size: 14px;
+    }
+}
+
+.fi.fi-rr-search.fs-4 {
+    text-decoration: none;
+    color: black;
+    font-size: 22px;
+    padding-left: 30px;
+}
+
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:16px;
+}
+.product-card{border:none;text-decoration:none;color:inherit}
+.product-card .card-img-top{object-fit:cover;height:140px}
+.product-card .price{font-weight:600}

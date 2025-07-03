@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .register-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 50px 0;
+        text-align: center;
+    }
+    .register-container h1 {
+        font-family: 'Sitka Subheading', serif;
+        margin-bottom: 30px;
+    }
+    .register-container input[type="text"],
+    .register-container input[type="email"],
+    .register-container input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    .register-container button {
+        width: 100%;
+        background-color: black;
+        color: white;
+        border: none;
+        padding: 12px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .register-container button:hover {
+        background-color: #333;
+    }
+    .register-links {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+    .register-links a {
+        color: black;
+        text-decoration: none;
+    }
+    .register-links a:hover {
+        text-decoration: underline;
+    }
+    .form-group {
+        text-align: left;
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+    .error-message {
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
+        text-align: left;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    .text-muted {
+        color: #6c757d;
+    }
+</style>
+<div class="container register-container">
+    <h1>СТВОРИТИ АКАУНТ</h1>
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if registration_form.non_field_errors %}
+            <div class="error-message" style="margin-bottom: 15px;">
+                {% for error in registration_form.non_field_errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% for field in registration_form %}
+            <div class="form-group">
+                {% if field.name == 'username' %}
+                    <label for="{{ field.id_for_label }}">Ім'я користувача</label>
+                {% elif field.name == 'email' %}
+                    <label for="{{ field.id_for_label }}">Електронна пошта</label>
+                {% elif field.name == 'password1' %}
+                    <label for="{{ field.id_for_label }}">Пароль</label>
+                {% elif field.name == 'password2' %}
+                    <label for="{{ field.id_for_label }}">Підтвердження паролю</label>
+                {% else %}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% endif %}
+                
+                {{ field }}
+                
+                {% if field.help_text %}
+                    <small class="form-text text-muted" style="display: block; font-size: 12px; margin-top: 5px;">
+                        {{ field.help_text }}
+                    </small>
+                {% endif %}
+                
+                {% for error in field.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        
+        <button type="submit">Зареєструватися</button>
+    </form>
+    <div class="register-links">
+        <a href="{% url 'login' %}">Вже є акаунт? Увійдіть</a>
+    </div>
+</div>
+{% endblock %}

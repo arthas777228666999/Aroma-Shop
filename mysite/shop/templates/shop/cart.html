@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load math_filters %}
+
+{% block content %}
+
+{% load static %} 
+<link rel="stylesheet" href="{% static 'css/cart_style.css' %}">
+
+<main class="flex-grow-1">
+    
+    {% if cart_items %}
+        <br>
+        <h1>ВАШ КОШИК</h1> 
+        <div class="row">
+            <div class="col-lg-8">
+                {% for item in cart_items %}
+                <div class="cart-item" id="cart-item-{{ item.id }}">
+                    <img src="{{ item.product.picture.url }}" alt="{{ item.product.name }}" class="cart-item-img">
+                    <div class="cart-item-details">
+                        <h5>{{ item.product.name }}</h5>
+                        <p class="text-muted">Код: {{ item.product.code }}</p>
+                        <p class="fw-bold">{{ item.product.price }} грн</p>
+                    </div>
+                    <div class="cart-quantity">
+                        <form method="post" action="{% url 'update_cart_item' item.id %}" class="quantity-form d-flex align-items-center">
+                            {% csrf_token %}
+                            <button type="button" class="quantity-btn decrease">-</button>
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="quantity-input">
+                            <button type="button" class="quantity-btn increase">+</button>
+                        </form>
+                    </div>
+                    <div class="ms-3 fw-bold">
+                        {{ item.product.price|multiply:item.quantity }} грн
+                    </div>
+                    <form method="post" action="{% url 'remove_from_cart' item.id %}" class="remove-form ms-3">
+                        {% csrf_token %}
+                        <button type="submit" class="remove-btn" title="Видалити">&times;</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="cart-summary">
+                    <h4>Сума замовлення</h4>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Товари ({{ cart_items|length }})</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Доставка</span>
+                        <span>За тарифами перевізника</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Разом</span>
+                        <span>{{ total }} грн</span>
+                    </div>
+                    <a href="{% url 'checkout' %}" class="btn btn-dark w-100 mt-3">ОФОРМИТИ ЗАМОВЛЕННЯ</a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="empty_cart">
+            <h1>ВАШ КОШИК ПОРОЖНІЙ</h1> 
+            <p>У вашому кошику немає товарів</p>
+            <div class="text-center">
+                <a href="{% url 'product_list_perf' %}" class="btn btn-outline-dark mt-3">ПЕРЕГЛЯНУТИ ПАРФУМИ</a>
+                <a href="{% url 'product_list_cand' %}" class="btn btn-outline-dark mt-3">ПЕРЕГЛЯНУТИ СВІЧКИ</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.quantity-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const form = this.closest('.quantity-form');
+            const input = form.querySelector('.quantity-input');
+            let value = parseInt(input.value);
+
+            if (this.classList.contains('decrease')) {
+                value = Math.max(1, value - 1);
+            } else if (this.classList.contains('increase')) {
+                value = value + 1;
+            }
+            input.value = value;
+            form.submit();
+        });
+    });
+});
+</script>
+{% endblock %}

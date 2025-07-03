@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% load static %} 
+<link rel="stylesheet" href="{% static 'css/perfume_filtered_list_style.css' %}">
+
+<div>
+    <h1 class="text-center my-4">{{ title }}</h1>
+</div>
+<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {% for product in products %}
+    <div class="col">
+        <div class="product-card">
+            <div class="product-image-container">                          
+                <!-- Badges -->
+                <div class="badge-container">
+                    {% if product.is_bestseller %}
+                    <span class="bestseller-badge mb-1 d-block">BESTSELLER</span>
+                    {% endif %}
+                </div>
+                
+                <!-- Product Image -->
+                {% if product.picture %}
+                <img src="{{ product.picture.url }}" class="product-image" alt="{{ product.name }}">
+                {% else %}
+                <div class="bg-light d-flex justify-content-center align-items-center product-image">
+                    <i class="bi bi-image" style="font-size: 3rem; color: #dee2e6;"></i>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="product-info">
+                <!-- Product Title -->
+                <h5 class="product-title">
+                    {% if product.name %}
+                        {{ product.name }}
+                    {% else %}
+                        {% if product.brand %}{{ product.brand }}{% endif %}
+                    {% endif %}
+                </h5>
+                
+                <!-- Product Description -->
+                <div class="product-description">
+                    {% if product.short_description %}
+                        {{ product.short_description }}
+                    {% else %}
+                        {% if product.gender %}{{ product.get_gender_display }}{% endif %}
+                        {% if product.scent_group %}, {{ product.get_scent_group_display }}{% endif %}
+                    {% endif %}
+                </div>
+                
+                <!-- Price Display -->
+                <div class="price-container">
+                    {% if product.sale_price %}
+                        <span class="sale-price">₴{{ product.sale_price }}</span>
+                        <span class="original-price">₴{{ product.price }}</span>
+                    {% else %}
+                        <span class="regular-price">₴{{ product.get_display_price }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="empty-state py-5">
+            <i class="bi bi-search empty-state-icon d-block mb-3"></i>
+            <h4>Товарів не знайдено</h4>
+            <p class="text-muted">Наразі товари з такими параметрами відсутні.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!-- Pagination  -->
+{% if products.has_other_pages %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination">
+        {% if products.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ products.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+
+        {% for i in products.paginator.page_range %}
+        <li class="page-item {% if products.number == i %}active{% endif %}">
+            <a class="page-link" href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a>
+        </li>
+        {% endfor %}
+
+        {% if products.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ products.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
